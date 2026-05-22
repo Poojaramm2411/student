@@ -12,10 +12,10 @@ public class Course {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String title;
-    private String description;
+    private String courseName;
+    private String department;
     private String duration;
-    private String level;
+    private String status;
 
     // Getters & Setters
     public Long getId() {
@@ -26,20 +26,20 @@ public class Course {
         this.id = id;
     }
 
-    public String getTitle() {
-        return title;
+    public String getCourseName() {
+        return courseName;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setCourseName(String courseName) {
+        this.courseName = courseName;
     }
 
-    public String getDescription() {
-        return description;
+    public String getDepartment() {
+        return department;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDepartment(String department) {
+        this.department = department;
     }
 
     public String getDuration() {
@@ -50,11 +50,11 @@ public class Course {
         this.duration = duration;
     }
 
-    public String getLevel() {
-        return level;
+    public String getStatus() {
+        return status;
     }
 
-    public void setLevel(String level) {
-        this.level = level;
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

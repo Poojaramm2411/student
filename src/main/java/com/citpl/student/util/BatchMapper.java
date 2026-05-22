@@ -17,7 +17,7 @@ public class BatchMapper {
         batch.setStartDate(dto.getStartDate());
         batch.setEndDate(dto.getEndDate());
         batch.setStatus(dto.getStatus());
-        batch.setCapacity(dto.getCapacity());
+        
 
         return batch;
     }
@@ -31,7 +31,6 @@ public class BatchMapper {
         dto.setStartDate(batch.getStartDate());
         dto.setEndDate(batch.getEndDate());
         dto.setStatus(batch.getStatus());
-        dto.setCapacity(batch.getCapacity());
 
         return dto;
     }

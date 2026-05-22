@@ -13,10 +13,10 @@ public class CourseMapper {
 
         Course course = new Course();
 
-        course.setTitle(dto.getTitle());
-        course.setDescription(dto.getDescription());
+        course.setCourseName(dto.getCourseName());
+        course.setDepartment(dto.getDepartment());
         course.setDuration(dto.getDuration());
-        course.setLevel(dto.getLevel());
+        course.setStatus(dto.getStatus  ());
 
         return course;
     }
@@ -26,10 +26,10 @@ public class CourseMapper {
         CourseResponseDTO dto = new CourseResponseDTO();
 
         dto.setId(course.getId());
-        dto.setTitle(course.getTitle());
-        dto.setDescription(course.getDescription());
+        dto.setCourseName(course.getCourseName());
+        dto.setDepartment(course.getDepartment());
         dto.setDuration(course.getDuration());
-        dto.setLevel(course.getLevel());
+        dto.setStatus(course.getStatus());
 
         return dto;
     }

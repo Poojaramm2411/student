@@ -26,7 +26,6 @@ public class BatchServiceImpl implements BatchService {
         batch.setStartDate(dto.getStartDate());
         batch.setEndDate(dto.getEndDate());
         batch.setStatus(dto.getStatus());
-        batch.setCapacity(dto.getCapacity());
         return mapToResponse(batchRepository.save(batch));
     }
 
@@ -45,7 +44,6 @@ public class BatchServiceImpl implements BatchService {
         batch.setStartDate(dto.getStartDate());
         batch.setEndDate(dto.getEndDate());
         batch.setStatus(dto.getStatus());
-        batch.setCapacity(dto.getCapacity());
         return mapToResponse(batchRepository.save(batch));
     }
 
@@ -69,7 +67,6 @@ public class BatchServiceImpl implements BatchService {
         dto.setStartDate(batch.getStartDate());
         dto.setEndDate(batch.getEndDate());
         dto.setStatus(batch.getStatus());
-        dto.setCapacity(batch.getCapacity());
         return dto;
     }
 }

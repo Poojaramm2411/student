@@ -16,7 +16,7 @@ public class Batch {
     private String startDate;
     private String endDate;
     private String status;
-    private Integer capacity;
+   
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -33,6 +33,5 @@ public class Batch {
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
 
-    public Integer getCapacity() { return capacity; }
-    public void setCapacity(Integer capacity) { this.capacity = capacity; }
+    
 }

@@ -25,10 +25,9 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public CourseResponseDTO createCourse(CourseRequestDTO dto) {
         Course course = new Course();
-        course.setTitle(dto.getTitle());
-        course.setDescription(dto.getDescription());
+        course.setCourseName(dto.getCourseName());
+        course.setDepartment(dto.getDepartment());
         course.setDuration(dto.getDuration());
-        course.setLevel(dto.getLevel());
         return mapToResponse(courseRepository.save(course));
     }
 
@@ -51,10 +50,10 @@ public class CourseServiceImpl implements CourseService {
     public CourseResponseDTO updateCourse(Long id, CourseRequestDTO dto) {
         Course course = courseRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Course not found with id: " + id));
-        course.setTitle(dto.getTitle());
-        course.setDescription(dto.getDescription());
+        course.setCourseName(dto.getCourseName());
+        course.setDepartment(dto.getDepartment());
         course.setDuration(dto.getDuration());
-        course.setLevel(dto.getLevel());
+        // status not present on CourseRequestDTO; preserve existing status
         return mapToResponse(courseRepository.save(course));
     }
 
@@ -66,18 +65,18 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public Page<CourseResponseDTO> getCourses(String search, String level, Pageable pageable) {
-        return courseRepository.findByFilters(search, level, pageable)
+    public Page<CourseResponseDTO> getCourses(String search, String status, Pageable pageable) {
+        return courseRepository.findByFilters(search, status, pageable)
                 .map(this::mapToResponse);
     }
 
     private CourseResponseDTO mapToResponse(Course course) {
         CourseResponseDTO dto = new CourseResponseDTO();
         dto.setId(course.getId());
-        dto.setTitle(course.getTitle());
-        dto.setDescription(course.getDescription());
+        dto.setCourseName(course.getCourseName());
+        dto.setDepartment(course.getDepartment());
         dto.setDuration(course.getDuration());
-        dto.setLevel(course.getLevel());
+        dto.setStatus(course.getStatus());
         return dto;
     }
 }
