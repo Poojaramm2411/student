@@ -29,9 +29,9 @@ public class CourseController {
     @GetMapping
     public Page<CourseResponseDTO> getCourses(
             @RequestParam(required = false) String search,
-            @RequestParam(required = false) String level,
+            @RequestParam(required = false) String status,
             Pageable pageable) {
-        return courseService.getCourses(search, level, pageable);
+        return courseService.getCourses(search, status, pageable);
     }
 
     @GetMapping("/{id}")
@@ -44,9 +44,8 @@ public class CourseController {
         return courseService.createCourse(dto);
     }
 
-    @PutMapping("/{id}")
-    public CourseResponseDTO updateCourse(@PathVariable Long id,
-            @RequestBody CourseRequestDTO dto) {
+    @PutMapping("/{id}/status")
+    public CourseResponseDTO toggleStatus(@PathVariable Long id, @RequestBody CourseRequestDTO dto) {
         return courseService.updateCourse(id, dto);
     }
 

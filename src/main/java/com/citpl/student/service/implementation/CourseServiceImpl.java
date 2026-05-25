@@ -12,6 +12,8 @@ import com.citpl.student.service.CourseService;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.PageImpl;
+import java.util.stream.Stream;
 
 @Service
 public class CourseServiceImpl implements CourseService {
@@ -28,6 +30,7 @@ public class CourseServiceImpl implements CourseService {
         course.setCourseName(dto.getCourseName());
         course.setDepartment(dto.getDepartment());
         course.setDuration(dto.getDuration());
+        course.setStatus(dto.getStatus());
         return mapToResponse(courseRepository.save(course));
     }
 
@@ -53,7 +56,7 @@ public class CourseServiceImpl implements CourseService {
         course.setCourseName(dto.getCourseName());
         course.setDepartment(dto.getDepartment());
         course.setDuration(dto.getDuration());
-        // status not present on CourseRequestDTO; preserve existing status
+        course.setStatus(dto.getStatus());
         return mapToResponse(courseRepository.save(course));
     }
 
@@ -64,10 +67,35 @@ public class CourseServiceImpl implements CourseService {
         courseRepository.deleteById(id);
     }
 
+    @Override                          // ✅ added @Override
+    public CourseResponseDTO updateStatus(Long id, String status) {
+        Course course = courseRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Course not found with id: " + id));
+        course.setStatus(status);
+        return mapToResponse(courseRepository.save(course));
+    }
+
     @Override
     public Page<CourseResponseDTO> getCourses(String search, String status, Pageable pageable) {
-        return courseRepository.findByFilters(search, status, pageable)
-                .map(this::mapToResponse);
+        // simple implementation: filter in-memory
+        Stream<Course> stream = courseRepository.findAll().stream();
+        if (search != null && !search.isEmpty()) {
+            String s = search.toLowerCase();
+            stream = stream.filter(c -> (c.getCourseName() != null && c.getCourseName().toLowerCase().contains(s))
+                    || (c.getDepartment() != null && c.getDepartment().toLowerCase().contains(s)));
+        }
+        if (status != null && !status.isEmpty()) {
+            String st = status.toLowerCase();
+            stream = stream.filter(c -> c.getStatus() != null && c.getStatus().toLowerCase().equals(st));
+        }
+        List<CourseResponseDTO> filtered = stream
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), filtered.size());
+        List<CourseResponseDTO> pageContent = start > end ? List.of() : filtered.subList(start, end);
+        return new PageImpl<>(pageContent, pageable, filtered.size());
     }
 
     private CourseResponseDTO mapToResponse(Course course) {

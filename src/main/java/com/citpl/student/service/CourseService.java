@@ -20,5 +20,7 @@ public interface CourseService {
 
     void deleteCourse(Long id);
 
-    Page<CourseResponseDTO> getCourses(String search, String level, Pageable pageable);
+    Page<CourseResponseDTO> getCourses(String search, String status, Pageable pageable); // ✅ level → status
+
+    CourseResponseDTO updateStatus(Long id, String status); // ✅ added
 }
