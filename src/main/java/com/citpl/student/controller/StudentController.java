@@ -46,6 +46,12 @@ public class StudentController {
         return studentService.updateStudent(id, dto);
     }
 
+    // TOGGLE STATUS
+    @PatchMapping("/{id}/status")
+    public StudentResponseDTO toggleStatus(@PathVariable Long id) {
+        return studentService.toggleStatus(id);
+    }
+
     // DELETE
     @DeleteMapping("/{id}")
     public void deleteStudent(@PathVariable Long id) {

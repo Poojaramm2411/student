@@ -25,8 +25,7 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public StudentResponseDTO createStudent(StudentRequestDTO dto) {
         Student student = toEntity(dto);
-        Student saved = studentRepository.save(student);
-        return toDTO(saved);
+        return toDTO(studentRepository.save(student));
     }
 
     @Override
@@ -41,6 +40,8 @@ public class StudentServiceImpl implements StudentService {
     public StudentResponseDTO getStudentById(Long id) {
         Student student = studentRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Student not found"));
+                 Boolean current = student.getIsActive();
+    student.setIsActive(current == null ? true : !current);
         return toDTO(student);
     }
 
@@ -49,24 +50,38 @@ public class StudentServiceImpl implements StudentService {
         Student student = studentRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Student not found"));
         student.setName(dto.getName());
-        student.setEmail(dto.getEmail()); 
+        student.setEmail(dto.getEmail());
         student.setStudentCode(dto.getStudentCode());
         student.setAge(dto.getAge());
-        Student updated = studentRepository.save(student);
-        return toDTO(updated);
+        student.setIsActive(dto.getIsActive());
+        // ✅ new fields
+        student.setDateOfBirth(dto.getDateOfBirth());
+        student.setAddress(dto.getAddress());
+        student.setCity(dto.getCity());
+        student.setState(dto.getState());
+        student.setPinCode(dto.getPinCode());
+        return toDTO(studentRepository.save(student));
     }
 
     @Override
     public void deleteStudent(Long id) {
+        studentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Student not found"));
+        studentRepository.deleteById(id);
+    }
+
+    // ✅ new toggle status method
+    @Override
+    public StudentResponseDTO toggleStatus(Long id) {
         Student student = studentRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Student not found"));
-        studentRepository.delete(student);
+        student.setIsActive(!student.getIsActive()); // flip true/false
+        return toDTO(studentRepository.save(student));
     }
 
     @Override
     public Page<StudentResponseDTO> getStudents(String search, Integer age, Pageable pageable) {
         Page<Student> students;
-
         if (search != null && age != null) {
             students = studentRepository.findByNameContainingIgnoreCaseAndAge(search, age, pageable);
         } else if (search != null) {
@@ -76,7 +91,6 @@ public class StudentServiceImpl implements StudentService {
         } else {
             students = studentRepository.findAll(pageable);
         }
-
         return students.map(this::toDTO);
     }
 
@@ -86,6 +100,13 @@ public class StudentServiceImpl implements StudentService {
         student.setEmail(dto.getEmail());
         student.setAge(dto.getAge());
         student.setStudentCode(dto.getStudentCode());
+        student.setIsActive(dto.getIsActive() != null ? dto.getIsActive() : true);
+       
+        student.setDateOfBirth(dto.getDateOfBirth());
+        student.setAddress(dto.getAddress());
+        student.setCity(dto.getCity());
+        student.setState(dto.getState());
+        student.setPinCode(dto.getPinCode());
         return student;
     }
 
@@ -96,6 +117,12 @@ public class StudentServiceImpl implements StudentService {
         dto.setEmail(student.getEmail());
         dto.setAge(student.getAge());
         dto.setStudentCode(student.getStudentCode());
+        dto.setIsActive(student.getIsActive());
+        dto.setDateOfBirth(student.getDateOfBirth());
+        dto.setAddress(student.getAddress());
+        dto.setCity(student.getCity());
+        dto.setState(student.getState());
+        dto.setPinCode(student.getPinCode());
         return dto;
     }
 }
