@@ -38,10 +38,9 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public StudentResponseDTO getStudentById(Long id) {
+        // ✅ fixed - removed toggle code from here
         Student student = studentRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Student not found"));
-                 Boolean current = student.getIsActive();
-    student.setIsActive(current == null ? true : !current);
         return toDTO(student);
     }
 
@@ -54,7 +53,6 @@ public class StudentServiceImpl implements StudentService {
         student.setStudentCode(dto.getStudentCode());
         student.setAge(dto.getAge());
         student.setIsActive(dto.getIsActive());
-        // ✅ new fields
         student.setDateOfBirth(dto.getDateOfBirth());
         student.setAddress(dto.getAddress());
         student.setCity(dto.getCity());
@@ -70,12 +68,12 @@ public class StudentServiceImpl implements StudentService {
         studentRepository.deleteById(id);
     }
 
-    // ✅ new toggle status method
     @Override
     public StudentResponseDTO toggleStatus(Long id) {
         Student student = studentRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Student not found"));
-        student.setIsActive(!student.getIsActive()); // flip true/false
+        Boolean current = student.getIsActive();
+        student.setIsActive(current == null ? true : !current); // ✅ null safe
         return toDTO(studentRepository.save(student));
     }
 
@@ -94,6 +92,13 @@ public class StudentServiceImpl implements StudentService {
         return students.map(this::toDTO);
     }
 
+    // ✅ Search by id, name, email, city
+    @Override
+    public Page<StudentResponseDTO> searchStudents(String search, Pageable pageable) {
+        return (Page<StudentResponseDTO>) studentRepository.searchStudents(search, pageable)
+                .map(this::toDTO);
+    }
+
     private Student toEntity(StudentRequestDTO dto) {
         Student student = new Student();
         student.setName(dto.getName());
@@ -101,7 +106,6 @@ public class StudentServiceImpl implements StudentService {
         student.setAge(dto.getAge());
         student.setStudentCode(dto.getStudentCode());
         student.setIsActive(dto.getIsActive() != null ? dto.getIsActive() : true);
-       
         student.setDateOfBirth(dto.getDateOfBirth());
         student.setAddress(dto.getAddress());
         student.setCity(dto.getCity());
@@ -117,7 +121,7 @@ public class StudentServiceImpl implements StudentService {
         dto.setEmail(student.getEmail());
         dto.setAge(student.getAge());
         dto.setStudentCode(student.getStudentCode());
-        dto.setIsActive(student.getIsActive());
+        dto.setIsActive(student.getIsActive() != null ? student.getIsActive() : true);
         dto.setDateOfBirth(student.getDateOfBirth());
         dto.setAddress(student.getAddress());
         dto.setCity(student.getCity());

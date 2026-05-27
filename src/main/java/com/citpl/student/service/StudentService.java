@@ -13,5 +13,6 @@ public interface StudentService {
     StudentResponseDTO updateStudent(Long id, StudentRequestDTO dto);
     void deleteStudent(Long id);
     Page<StudentResponseDTO> getStudents(String search, Integer age, Pageable pageable);
-    StudentResponseDTO toggleStatus(Long id); 
+    StudentResponseDTO toggleStatus(Long id);
+    Page<StudentResponseDTO> searchStudents(String search, Pageable pageable); 
 }
