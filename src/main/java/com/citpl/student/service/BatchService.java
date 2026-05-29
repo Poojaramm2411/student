@@ -17,4 +17,6 @@ public interface BatchService {
     BatchResponseDTO updateBatch(Long id, BatchRequestDTO dto);
 
     void deleteBatch(Long id);
+
+    BatchResponseDTO updateStatus(Long id, String status); // ✅ added
 }

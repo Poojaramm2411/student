@@ -5,7 +5,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
-
 @Entity
 public class Batch {
 
@@ -16,7 +15,6 @@ public class Batch {
     private String startDate;
     private String endDate;
     private String status;
-   
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -32,6 +30,4 @@ public class Batch {
 
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
-
-    
 }

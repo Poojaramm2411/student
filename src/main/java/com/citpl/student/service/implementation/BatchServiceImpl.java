@@ -60,6 +60,14 @@ public class BatchServiceImpl implements BatchService {
                 .map(this::mapToResponse);
     }
 
+    @Override
+    public BatchResponseDTO updateStatus(Long id, String status) {
+        Batch batch = batchRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Batch not found with id: " + id));
+        batch.setStatus(status);
+        return mapToResponse(batchRepository.save(batch));
+    }
+
     private BatchResponseDTO mapToResponse(Batch batch) {
         BatchResponseDTO dto = new BatchResponseDTO();
         dto.setId(batch.getId());
