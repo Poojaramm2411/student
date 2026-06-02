@@ -23,4 +23,6 @@ public interface CourseService {
     Page<CourseResponseDTO> getCourses(String search, String status, Pageable pageable); // ✅ level → status
 
     CourseResponseDTO updateStatus(Long id, String status); // ✅ added
+
+    Object toggleStatus(Long id);
 }

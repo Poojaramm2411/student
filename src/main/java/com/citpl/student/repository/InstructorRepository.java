@@ -1,20 +1,23 @@
 package com.citpl.student.repository;
 
+import com.citpl.student.model.Instructor;
+import com.citpl.student.model.Status;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
-import com.citpl.student.model.Instructor;
-
+@Repository
 public interface InstructorRepository extends JpaRepository<Instructor, Long> {
 
+    boolean existsByEmail(String email);
+
     @Query("SELECT i FROM Instructor i WHERE " +
-            "(:search IS NULL OR LOWER(i.name) LIKE LOWER(CONCAT('%', :search, '%')) " +
-            "OR LOWER(i.email) LIKE LOWER(CONCAT('%', :search, '%'))) " +
-            "AND (:specialization IS NULL OR i.specialization = :specialization)")
-    Page<Instructor> findByFilters(@Param("search") String search,
-            @Param("specialization") String specialization,
-            Pageable pageable);
+           "(:search IS NULL OR LOWER(CONCAT(i.name, i.email, i.specialization)) LIKE LOWER(CONCAT('%', :search, '%'))) " +
+           "AND (:status IS NULL OR i.status = :status)")
+    Page<Instructor> searchInstructors(@Param("search") String search,
+                                        @Param("status") Status status,
+                                        Pageable pageable);
 }

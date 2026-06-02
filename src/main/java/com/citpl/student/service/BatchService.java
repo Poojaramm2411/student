@@ -3,20 +3,14 @@ package com.citpl.student.service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.citpl.student.dto.Request.BatchRequestDTO;
-import com.citpl.student.dto.Response.BatchResponseDTO;
-
-public interface BatchService {
-
-    Page<BatchResponseDTO> getBatches(String search, String status, Pageable pageable);
-
-    BatchResponseDTO getBatchById(Long id);
+public interface BatchService<BatchResponseDTO, BatchRequestDTO> {
 
     BatchResponseDTO createBatch(BatchRequestDTO dto);
-
+    BatchResponseDTO getBatchById(Long id);
+    Page<BatchResponseDTO> getAllBatches(String search, String status, Pageable pageable);
     BatchResponseDTO updateBatch(Long id, BatchRequestDTO dto);
-
+    BatchResponseDTO toggleStatus(Long id);
     void deleteBatch(Long id);
-
-    BatchResponseDTO updateStatus(Long id, String status); // ✅ added
+    BatchResponseDTO createBatch(com.citpl.student.dto.Request.BatchRequestDTO dto);
+    BatchResponseDTO updateBatch(Long id, com.citpl.student.dto.Request.BatchRequestDTO dto);
 }

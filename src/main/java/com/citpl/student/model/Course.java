@@ -1,60 +1,39 @@
 package com.citpl.student.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
+@Table(name = "course")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Course {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String courseName;
+
+    @Column(nullable = false, unique = true)
+    private String courseCode;
+
+    private String description;
+
     private String department;
-    private String duration;
-    private String status;
 
-    // Getters & Setters
-    public Long getId() {
-        return id;
-    }
+    private Integer duration;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Status status = Status.ACTIVE;
 
-    public String getCourseName() {
-        return courseName;
-    }
-
-    public void setCourseName(String courseName) {
-        this.courseName = courseName;
-    }
-
-    public String getDepartment() {
-        return department;
-    }
-
-    public void setDepartment(String department) {
-        this.department = department;
-    }
-
-    public String getDuration() {
-        return duration;
-    }
-
-    public void setDuration(String duration) {
-        this.duration = duration;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
+    // Many Courses → One Batch
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "batch_id", nullable = false)
+    private Batch batch;
 }

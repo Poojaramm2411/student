@@ -1,21 +1,19 @@
 package com.citpl.student.dto.Request;
 
+import lombok.*;
+import java.time.LocalDate;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class BatchRequestDTO {
 
     private String batchName;
-    private String startDate;
-    private String endDate;
+    private String batchCode;
+    private LocalDate startDate;
+    private LocalDate endDate;
     private String status;
-
-    public String getBatchName() { return batchName; }
-    public void setBatchName(String batchName) { this.batchName = batchName; }
-
-    public String getStartDate() { return startDate; }
-    public void setStartDate(String startDate) { this.startDate = startDate; }
-
-    public String getEndDate() { return endDate; }
-    public void setEndDate(String endDate) { this.endDate = endDate; }
-
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+    private Long instructorId;  // FK to Instructor
 }

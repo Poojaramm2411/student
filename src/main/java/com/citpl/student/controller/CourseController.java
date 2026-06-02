@@ -1,56 +1,64 @@
 package com.citpl.student.controller;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.citpl.student.dto.Request.CourseRequestDTO;
 import com.citpl.student.dto.Response.CourseResponseDTO;
 import com.citpl.student.service.CourseService;
+import lombok.RequiredArgsConstructor;
+
+import java.util.List;
+
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/courses")
+@RequiredArgsConstructor
 public class CourseController {
 
     private final CourseService courseService;
 
-    public CourseController(CourseService courseService) {
-        this.courseService = courseService;
-    }
-
-    @GetMapping
-    public Page<CourseResponseDTO> getCourses(
-            @RequestParam(required = false) String search,
-            @RequestParam(required = false) String status,
-            Pageable pageable) {
-        return courseService.getCourses(search, status, pageable);
+    @PostMapping
+    public ResponseEntity<CourseResponseDTO> createCourse(@RequestBody CourseRequestDTO dto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(courseService.createCourse(dto));
     }
 
     @GetMapping("/{id}")
-    public CourseResponseDTO getCourseById(@PathVariable Long id) {
-        return courseService.getCourseById(id);
+    public ResponseEntity<CourseResponseDTO> getCourseById(@PathVariable Long id) {
+        return ResponseEntity.ok(courseService.getCourseById(id));
     }
 
-    @PostMapping
-    public CourseResponseDTO createCourse(@RequestBody CourseRequestDTO dto) {
-        return courseService.createCourse(dto);
+    @GetMapping
+    public ResponseEntity<List<CourseResponseDTO>> getAllCourses(
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) Long batchId,   // filter by batch
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir) {
+
+        Pageable pageable = PageRequest.of(page, size,
+                sortDir.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending());
+        return ResponseEntity.ok(courseService.getAllCourses());
     }
 
-    @PutMapping("/{id}/status")
-    public CourseResponseDTO toggleStatus(@PathVariable Long id, @RequestBody CourseRequestDTO dto) {
-        return courseService.updateCourse(id, dto);
+    @PutMapping("/{id}")
+    public ResponseEntity<CourseResponseDTO> updateCourse(@PathVariable Long id, @RequestBody CourseRequestDTO dto) {
+        return ResponseEntity.ok(courseService.updateCourse(id, dto));
+    }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<Object> toggleStatus(@PathVariable Long id) {
+        return ResponseEntity.ok(courseService.toggleStatus(id));
     }
 
     @DeleteMapping("/{id}")
-    public void deleteCourse(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteCourse(@PathVariable Long id) {
         courseService.deleteCourse(id);
+        return ResponseEntity.noContent().build();
     }
 }
