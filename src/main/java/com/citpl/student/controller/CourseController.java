@@ -4,9 +4,7 @@ import com.citpl.student.dto.Request.CourseRequestDTO;
 import com.citpl.student.dto.Response.CourseResponseDTO;
 import com.citpl.student.service.CourseService;
 import lombok.RequiredArgsConstructor;
-
-import java.util.List;
-
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -19,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class CourseController {
 
-    private final CourseService courseService;
+    private final CourseService courseService;   // ← interface, not impl
 
     @PostMapping
     public ResponseEntity<CourseResponseDTO> createCourse(@RequestBody CourseRequestDTO dto) {
@@ -32,10 +30,10 @@ public class CourseController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CourseResponseDTO>> getAllCourses(
+    public ResponseEntity<Page<CourseResponseDTO>> getAllCourses(
             @RequestParam(required = false) String search,
             @RequestParam(required = false) String status,
-            @RequestParam(required = false) Long batchId,   // filter by batch
+            @RequestParam(required = false) Long batchId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id") String sortBy,
@@ -43,16 +41,17 @@ public class CourseController {
 
         Pageable pageable = PageRequest.of(page, size,
                 sortDir.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending());
-        return ResponseEntity.ok(courseService.getAllCourses());
+        return ResponseEntity.ok(courseService.getAllCourses(search, status, batchId, pageable));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CourseResponseDTO> updateCourse(@PathVariable Long id, @RequestBody CourseRequestDTO dto) {
+    public ResponseEntity<CourseResponseDTO> updateCourse(@PathVariable Long id,
+                                                           @RequestBody CourseRequestDTO dto) {
         return ResponseEntity.ok(courseService.updateCourse(id, dto));
     }
 
     @PatchMapping("/{id}/status")
-    public ResponseEntity<Object> toggleStatus(@PathVariable Long id) {
+    public ResponseEntity<CourseResponseDTO> toggleStatus(@PathVariable Long id) {
         return ResponseEntity.ok(courseService.toggleStatus(id));
     }
 

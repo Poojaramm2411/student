@@ -1,18 +1,21 @@
 package com.citpl.student.service;
 
-import java.util.List;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import com.citpl.student.dto.Request.StudentRequestDTO;
 import com.citpl.student.dto.Response.StudentResponseDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface StudentService {
+
     StudentResponseDTO createStudent(StudentRequestDTO dto);
-    List<StudentResponseDTO> getAllStudents();
+
     StudentResponseDTO getStudentById(Long id);
+
+    Page<StudentResponseDTO> getAllStudents(String search, String status, Long batchId, Pageable pageable);
+
     StudentResponseDTO updateStudent(Long id, StudentRequestDTO dto);
-    void deleteStudent(Long id);
-    Page<StudentResponseDTO> getStudents(String search, Integer age, Pageable pageable);
+
     StudentResponseDTO toggleStatus(Long id);
-    Page<StudentResponseDTO> searchStudents(String search, Pageable pageable); 
+
+    void deleteStudent(Long id);
 }

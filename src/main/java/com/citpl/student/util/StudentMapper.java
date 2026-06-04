@@ -1,10 +1,10 @@
 package com.citpl.student.util;
 
-import org.springframework.stereotype.Component;
-
 import com.citpl.student.dto.Request.StudentRequestDTO;
 import com.citpl.student.dto.Response.StudentResponseDTO;
+import com.citpl.student.model.Status;
 import com.citpl.student.model.Student;
+import org.springframework.stereotype.Component;
 
 @Component
 public class StudentMapper {
@@ -15,6 +15,8 @@ public class StudentMapper {
         student.setEmail(dto.getEmail());
         student.setAge(dto.getAge());
         student.setStudentCode(dto.getStudentCode());
+        student.setCity(dto.getCity());
+        student.setStatus(Status.valueOf(dto.getStatus()));
         return student;
     }
 
@@ -25,6 +27,13 @@ public class StudentMapper {
         dto.setEmail(student.getEmail());
         dto.setAge(student.getAge());
         dto.setStudentCode(student.getStudentCode());
+        dto.setCity(student.getCity());
+        dto.setStatus(student.getStatus().name());
+
+        if (student.getBatch() != null) {
+            dto.setBatchId(student.getBatch().getId());
+            dto.setBatchName(student.getBatch().getBatchName());
+        }
         return dto;
     }
 }

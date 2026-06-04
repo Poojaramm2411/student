@@ -1,14 +1,15 @@
 package com.citpl.student.controller;
 
-import org.springframework.web.bind.annotation.*;
-
 import com.citpl.student.dto.Request.AdminRequest;
 import com.citpl.student.dto.Response.AdminResponse;
 import com.citpl.student.service.AdminService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/admin")
-@CrossOrigin("*") 
+@RequestMapping("/api/admin")
+@CrossOrigin("*")
 public class AdminController {
 
     private final AdminService adminService;
@@ -17,41 +18,35 @@ public class AdminController {
         this.adminService = adminService;
     }
 
+    // POST /api/admin/register
     @PostMapping("/register")
-    public AdminResponse register(
-            @RequestBody AdminRequest request) {
-
-        return adminService.register(request);
+    public ResponseEntity<AdminResponse> register(@RequestBody AdminRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(adminService.register(request));
     }
 
+    // POST /api/admin/login
     @PostMapping("/login")
-    public AdminResponse login(
-            @RequestBody AdminRequest request) {
-
-        return adminService.login(request);
+    public ResponseEntity<AdminResponse> login(@RequestBody AdminRequest request) {
+        return ResponseEntity.ok(adminService.login(request));
     }
 
+    // GET /api/admin/get/{email}
     @GetMapping("/get/{email}")
-    public AdminResponse getAdminByEmail(
-            @PathVariable String email) {
-
-        return adminService.getAdminByEmail(email);
+    public ResponseEntity<AdminResponse> getAdminByEmail(@PathVariable String email) {
+        return ResponseEntity.ok(adminService.getAdminByEmail(email));
     }
 
+    // PUT /api/admin/update/{email}
     @PutMapping("/update/{email}")
-    public AdminResponse updateAdmin(
-            @PathVariable String email,
-            @RequestBody AdminRequest request) {
-
-        return adminService.updateAdmin(email, request);
+    public ResponseEntity<AdminResponse> updateAdmin(@PathVariable String email,
+                                                      @RequestBody AdminRequest request) {
+        return ResponseEntity.ok(adminService.updateAdmin(email, request));
     }
 
+    // DELETE /api/admin/delete/{email}
     @DeleteMapping("/delete/{email}")
-    public String deleteAdmin(
-            @PathVariable String email) {
-
+    public ResponseEntity<String> deleteAdmin(@PathVariable String email) {
         adminService.deleteAdmin(email);
-
-        return "Admin Deleted Successfully";
+        return ResponseEntity.ok("Admin Deleted Successfully");
     }
 }

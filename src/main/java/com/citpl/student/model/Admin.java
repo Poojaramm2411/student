@@ -9,23 +9,22 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
-import javax.management.relation.Role;
-
 @Entity
-@Table(name = "admin")
+@Table(name = "admins")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Admin<status> implements UserDetails {
+public class Admin implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
-    private String username;
+    private String name;
+
+    // ✅ REMOVED username field — not needed
 
     @Column(nullable = false)
     private String password;
@@ -35,21 +34,19 @@ public class Admin<status> implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Role role;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private Status status = Status.ACTIVE;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_" + ((Entity) role).name()));
+        return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"));
     }
 
-    @Override public String getUsername()                { return username; }
-    @Override public String getPassword()                { return password; }
-    @Override public boolean isAccountNonExpired()       { return true; }
-    @Override public boolean isAccountNonLocked()        { return true; }
-    @Override public boolean isCredentialsNonExpired()   { return true; }
-    @Override public boolean isEnabled()                 { return status == Status.ACTIVE; }
+    @Override
+    public String getUsername() { return email; }  // ✅ email acts as username
+
+    @Override public String getPassword()              { return password; }
+    @Override public boolean isAccountNonExpired()     { return true; }
+    @Override public boolean isAccountNonLocked()      { return true; }
+    @Override public boolean isCredentialsNonExpired() { return true; }
+    @Override public boolean isEnabled()               { return status == Status.ACTIVE; }
 }

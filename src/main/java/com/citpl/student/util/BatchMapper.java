@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import com.citpl.student.dto.Request.BatchRequestDTO;
 import com.citpl.student.dto.Response.BatchResponseDTO;
 import com.citpl.student.model.Batch;
+import com.citpl.student.model.Status;
 
 @Component
 public class BatchMapper {
@@ -16,8 +17,7 @@ public class BatchMapper {
         batch.setBatchName(dto.getBatchName());
         batch.setStartDate(dto.getStartDate());
         batch.setEndDate(dto.getEndDate());
-        batch.setStatus(dto.getStatus());
-        
+        batch.setStatus(Status.valueOf(dto.getStatus())); // ← String to Enum
 
         return batch;
     }
@@ -30,7 +30,13 @@ public class BatchMapper {
         dto.setBatchName(batch.getBatchName());
         dto.setStartDate(batch.getStartDate());
         dto.setEndDate(batch.getEndDate());
-        dto.setStatus(batch.getStatus());
+        dto.setStatus(batch.getStatus().name()); // ← Enum to String
+
+        // instructor info (avoid null pointer)
+        if (batch.getInstructor() != null) {
+            dto.setInstructorId(batch.getInstructor().getId());
+            dto.setInstructorName(batch.getInstructor().getName());
+        }
 
         return dto;
     }

@@ -5,9 +5,9 @@ import com.citpl.student.dto.Response.AdminResponse;
 
 public interface AdminService {
 
-    AdminResponse login(AdminRequest request);
-
     AdminResponse register(AdminRequest request);
+
+    AdminResponse login(AdminRequest request);
 
     AdminResponse getAdminByEmail(String email);
 

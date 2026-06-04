@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import com.citpl.student.dto.Request.CourseRequestDTO;
 import com.citpl.student.dto.Response.CourseResponseDTO;
 import com.citpl.student.model.Course;
+import com.citpl.student.model.Status;
 
 @Component
 public class CourseMapper {
@@ -16,7 +17,7 @@ public class CourseMapper {
         course.setCourseName(dto.getCourseName());
         course.setDepartment(dto.getDepartment());
         course.setDuration(dto.getDuration());
-        course.setStatus(dto.getStatus  ());
+        course.setStatus(Status.valueOf(dto.getStatus())); // ← fixed typo (was getStatus  ())
 
         return course;
     }
@@ -29,7 +30,13 @@ public class CourseMapper {
         dto.setCourseName(course.getCourseName());
         dto.setDepartment(course.getDepartment());
         dto.setDuration(course.getDuration());
-        dto.setStatus(course.getStatus());
+        dto.setStatus(course.getStatus().name()); // ← Enum to String
+
+        // batch info (avoid null pointer)
+        if (course.getBatch() != null) {
+            dto.setBatchId(course.getBatch().getId());
+            dto.setBatchName(course.getBatch().getBatchName());
+        }
 
         return dto;
     }
