@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 
 import com.citpl.student.dto.Request.CourseRequestDTO;
 import com.citpl.student.dto.Response.CourseResponseDTO;
+import com.citpl.student.model.Batch;
 import com.citpl.student.model.Course;
 import com.citpl.student.model.Status;
 
@@ -11,33 +12,31 @@ import com.citpl.student.model.Status;
 public class CourseMapper {
 
     public Course toEntity(CourseRequestDTO dto) {
-
         Course course = new Course();
-
         course.setCourseName(dto.getCourseName());
+        course.setCourseCode(dto.getCourseCode());
+        course.setDescription(dto.getDescription());
         course.setDepartment(dto.getDepartment());
-        course.setDuration(dto.getDuration());
-        course.setStatus(Status.valueOf(dto.getStatus())); // ← fixed typo (was getStatus  ())
-
+        // ✅ convert Integer to String safely
+        course.setDuration(dto.getDuration() != null ? String.valueOf(dto.getDuration()) : null);
+        course.setStatus(dto.getStatus() != null ? Status.valueOf(dto.getStatus()) : Status.ACTIVE);
         return course;
     }
 
     public CourseResponseDTO toDTO(Course course) {
-
         CourseResponseDTO dto = new CourseResponseDTO();
-
         dto.setId(course.getId());
         dto.setCourseName(course.getCourseName());
+        dto.setCourseCode(course.getCourseCode());
+        dto.setDescription(course.getDescription());
         dto.setDepartment(course.getDepartment());
         dto.setDuration(course.getDuration());
-        dto.setStatus(course.getStatus().name()); // ← Enum to String
-
-        // batch info (avoid null pointer)
-        if (course.getBatch() != null) {
-            dto.setBatchId(course.getBatch().getId());
-            dto.setBatchName(course.getBatch().getBatchName());
+        dto.setStatus(course.getStatus() != null ? course.getStatus().name() : "ACTIVE");
+        Batch batch = course.getBatch();
+        if (batch != null) {
+            dto.setBatchId(batch.getId());
+            dto.setBatchName(batch.getBatchName());
         }
-
         return dto;
     }
 }

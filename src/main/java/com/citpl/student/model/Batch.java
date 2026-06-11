@@ -5,6 +5,9 @@ import lombok.*;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.citpl.student.converter.DateConverter;
+import jakarta.persistence.Convert;
+
 @Entity
 @Table(name = "batch")
 @Getter
@@ -24,24 +27,24 @@ public class Batch {
     @Column(nullable = false, unique = true)
     private String batchCode;
 
+    @Convert(converter = DateConverter.class)
     private LocalDate startDate;
 
+    @Convert(converter = DateConverter.class)
     private LocalDate endDate;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Status status = Status.ACTIVE;
 
-    // Many Batches → One Instructor
+    // ✅ nullable = true so batches with no instructor don't crash
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "instructor_id", nullable = false)
+    @JoinColumn(name = "instructor_id", nullable = true)
     private Instructor instructor;
 
-    // One Batch → Many Students
     @OneToMany(mappedBy = "batch", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Student> students;
 
-    // One Batch → Many Courses
     @OneToMany(mappedBy = "batch", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Course> courses;
 }

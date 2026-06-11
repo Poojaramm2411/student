@@ -14,10 +14,12 @@ public class CourseResponseDTO {
     private String courseCode;
     private String description;
     private String department;
-    private Integer duration;
+    private String duration;  // ✅ changed Integer to String
     private String status;
 
     // Flattened batch info
     private Long batchId;
     private String batchName;
+
+    // ✅ ALL auto-generated stubs removed — Lombok handles everything
 }

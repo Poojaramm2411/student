@@ -30,21 +30,21 @@ public class BatchServiceImpl implements BatchService{
                 .batchCode(dto.getBatchCode())
                 .startDate(dto.getStartDate())
                 .endDate(dto.getEndDate())
-                .status(dto.getStatus() != null ? Status.valueOf(dto.getStatus()) : Status.ACTIVE)
+                .status(Status.valueOf(dto.getStatus()))
                 .instructor(instructor)
                 .build();
 
-        return mapToResponse(batchRepository.save(batch));
+        return mapToResponse1(batchRepository.save(batch));
     }
 
     public BatchResponseDTO getBatchById(Long id) {
-        return mapToResponse(findById(id));
+        return mapToResponse1(findById(id));
     }
 
     public Page<BatchResponseDTO> getAllBatches(String search, String status, Pageable pageable) {
         Status statusEnum = (status != null && !status.isBlank()) ? Status.valueOf(status) : null;
         return batchRepository.searchBatches(search, statusEnum, pageable)
-                .map(this::mapToResponse);
+                .map(this::mapToResponse1);
     }
 
     public BatchResponseDTO updateBatch(Long id, BatchRequestDTO dto) {
@@ -59,13 +59,13 @@ public class BatchServiceImpl implements BatchService{
         batch.setStatus(Status.valueOf(dto.getStatus()));
         batch.setInstructor(instructor);
 
-        return mapToResponse(batchRepository.save(batch));
+        return mapToResponse1(batchRepository.save(batch));
     }
 
     public BatchResponseDTO toggleStatus(Long id) {
         Batch batch = findById(id);
         batch.setStatus(batch.getStatus() == Status.ACTIVE ? Status.INACTIVE : Status.ACTIVE);
-        return mapToResponse(batchRepository.save(batch));
+        return mapToResponse1(batchRepository.save(batch));
     }
 
     public void deleteBatch(Long id) {
@@ -77,7 +77,8 @@ public class BatchServiceImpl implements BatchService{
                 .orElseThrow(() -> new ResourceNotFoundException("Batch not found with id: " + id));
     }
 
-    private BatchResponseDTO mapToResponse(Batch batch) {
+    private BatchResponseDTO mapToResponse1(Batch batch) {
+        Instructor instructor = batch.getInstructor();
         return BatchResponseDTO.builder()
                 .id(batch.getId())
                 .batchName(batch.getBatchName())
@@ -85,8 +86,8 @@ public class BatchServiceImpl implements BatchService{
                 .startDate(batch.getStartDate())
                 .endDate(batch.getEndDate())
                 .status(batch.getStatus().name())
-                .instructorId(batch.getInstructor().getId())
-                .instructorName(batch.getInstructor().getName())
+                .instructorId(instructor != null ? instructor.getId() : null)
+                .instructorName(instructor != null ? instructor.getName() : "—")
                 .build();
     }
 

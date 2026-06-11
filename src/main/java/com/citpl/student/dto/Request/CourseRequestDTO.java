@@ -13,7 +13,7 @@ public class CourseRequestDTO {
     private String courseCode;
     private String description;
     private String department;
-    private Integer duration;
+    private String duration;  // ✅ changed from Integer to String
     private String status;
-    private Long batchId;  // FK to Batch
+    private Long batchId;
 }

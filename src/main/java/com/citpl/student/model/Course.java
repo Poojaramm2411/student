@@ -26,14 +26,27 @@ public class Course {
 
     private String department;
 
-    private Integer duration;
+    // ✅ String — DB stores "4 months" as text
+    private String duration;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Status status = Status.ACTIVE;
 
-    // Many Courses → One Batch
+    // ✅ nullable = true — courses without batch won't crash
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "batch_id", nullable = false)
+    @JoinColumn(name = "batch_id", nullable = true)
     private Batch batch;
+
+    public void setDuration(Integer duration2) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setDuration'");
+    }
+
+    public void setDuration(Object duration2) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setDuration'");
+    }
+
+    // ✅ ALL auto-generated stubs removed — Lombok @Getter/@Setter handles everything
 }

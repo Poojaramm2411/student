@@ -36,4 +36,17 @@ public class JwtUtil {
     public String generateToken(Admin saved) {
         return generateToken(saved.getEmail());
     }
+
+    public String extractEmail1(String token) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'extractEmail'");
+    }
+    public String extractEmail(String token) {
+    return Jwts.parserBuilder()
+            .setSigningKey(getSigningKey())
+            .build()
+            .parseClaimsJws(token)
+            .getBody()
+            .getSubject();
+}
 }

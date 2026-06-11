@@ -18,8 +18,9 @@ public class CorsConfig {
         config.setAllowCredentials(true);
         config.setAllowedOrigins(List.of(
             "http://localhost:8080",    // ✅ your backend
-            "http://localhost:3000",    // ✅ if you have a frontend
-            "http://localhost:4200"     // ✅ Angular (if applicable)
+            "http://localhost:3000",    // ✅ if you have a frontend 
+            "http://localhost:5173",    // ✅ Vite (if applicable)
+            "http://localhost:5174"
         ));
         config.setAllowedHeaders(List.of(
             "Authorization",
