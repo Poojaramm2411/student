@@ -2,51 +2,40 @@ package com.citpl.student.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import com.citpl.student.model.Status;
 
 @Entity
-@Table(name = "course")
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@Table(name = "courses")
+@Data @NoArgsConstructor @AllArgsConstructor @Builder
 public class Course {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     private String courseName;
-
-    @Column(nullable = false, unique = true)
     private String courseCode;
-
     private String description;
-
     private String department;
-
-    // ✅ String — DB stores "4 months" as text
     private String duration;
 
+    // Fee in rupees - used for GST calculation
+    @Column(name = "fee")
+    private Double fee;
+
+    // Batch name (denormalized for display)
+    private String batchName;
+
+    // Active / Inactive
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Status status = Status.ACTIVE;
 
-    // ✅ nullable = true — courses without batch won't crash
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "batch_id", nullable = true)
+    @JoinColumn(name = "batch_id")
     private Batch batch;
 
-    public void setDuration(Integer duration2) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setDuration'");
-    }
-
-    public void setDuration(Object duration2) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setDuration'");
-    }
-
-    // ✅ ALL auto-generated stubs removed — Lombok @Getter/@Setter handles everything
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "instructor_id")
+    private Instructor instructor;
 }
